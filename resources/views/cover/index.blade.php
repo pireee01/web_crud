@@ -4,7 +4,7 @@
         <div class="my-3 p-3 bg-body rounded shadow-sm">
                 <!-- FORM PENCARIAN -->
                 <div class="pb-3">
-                  <form class="d-flex" action="" method="get">
+                  <form class="d-flex" action="{{ url('profil') }}" method="get">
                       <input class="form-control me-1" type="search" name="katakunci" value="{{ Request::get('katakunci') }}" placeholder="Masukkan kata kunci" aria-label="Search">
                       <button class="btn btn-secondary" type="submit">Cari</button>
                   </form>
@@ -12,7 +12,7 @@
                 
                 <!-- TOMBOL TAMBAH DATA -->
                 <div class="pb-3">
-                  <a href='' class="btn btn-primary">+ Tambah Data</a>
+                  <a href='{{ url('profil/create') }}' class="btn btn-primary">+ Tambah Data</a>
                 </div>
           
                 <table class="table table-striped">
@@ -27,19 +27,26 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach ($data as $item)
                         <tr>
-                            <td>Pirelli Rahelya Piri</td>
-                            <td>081222232995</td>
-                            <td>University Village</td>
-                            <td>Computer Science BINUS University</td>
-                            <td>Computer Science</td>
+                            <td>{{ $item->nama_lengkap }}</td>
+                            <td>{{ $item->no_handphone }}</td>
+                            <td>{{ $item->alamat }}</td>
+                            <td>{{ $item->pendidikan }}</td>
+                            <td>{{ $item->jurusan }}</td>
                             <td>
-                                <a href='' class="btn btn-warning btn-sm">Edit</a>
-                                <a href='' class="btn btn-danger btn-sm">Del</a>
+                                <a href='{{ url('profil/'.$item->nama_lengkap.'/edit') }}' class="btn btn-warning btn-sm">Edit</a>
+                                <form onsubmit="return confirm('Are you sure this data will be deleted ?')" class='d-inline' action="{{ url('profil/'.$item->nama_lengkap) }}" method="post">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" name="submit" class="btn btn-danger btn-sm">Del</button>
+                                </form>
                             </td>
                         </tr>
+                        @endforeach   
                     </tbody>
                 </table>
+                {{ $data->withQueryString()->links() }}
           </div>
           <!-- AKHIR DATA -->
 @endsection

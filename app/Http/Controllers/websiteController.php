@@ -10,9 +10,18 @@ class websiteController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('cover.index');
+        $katakunci = $request->katakunci;
+        $jumlahbaris = 3;
+        if(strlen($katakunci)){
+            $data = profil::where('nama_lengkap','like',"%$katakunci%")
+                    ->orWhere('jurusan','like',"%$katakunci%")
+                    ->paginate($jumlahbaris);
+        }else{
+            $data = profil::orderBy('nama_lengkap','desc')->paginate(3);
+        }
+        return view('cover.index')->with('data',$data);
     }
 
     /**
@@ -28,13 +37,6 @@ class websiteController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'nama_lengkap'=>'required',
-            'no_handphone'=>'required',
-            'alamat'=>'required',
-            'pendidikan'=>'required',
-            'jurusan'=>'required',
-        ]);
         $data=[
             'nama_lengkap'=>$request->nama,
             'no_handphone'=>$request->noHP,
@@ -43,7 +45,7 @@ class websiteController extends Controller
             'jurusan'=>$request->jurusan,
         ];
         profil::create($data);
-        return 'Hello World !!';
+        return redirect()->to('profil')->with('success','Data added successfully !!');
     }
 
     /**
@@ -56,10 +58,13 @@ class websiteController extends Controller
 
     /**
      * Show the form for editing the specified resource.
+     * 
+     * @param int $id
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $data = profil::where('nama_lengkap', $id)->first();
+        return view('cover.edit')->with('data', $data);
     }
 
     /**
@@ -67,14 +72,26 @@ class websiteController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        
+        $data=[
+            'no_handphone'=>$request->noHP,
+            'alamat'=>$request->alamat,
+            'pendidikan'=>$request->pendidikan,
+            'jurusan'=>$request->jurusan,
+        ];
+        profil::where('nama_lengkap', $id)->update($data);
+        return redirect()->to('profil')->with('success','Data update was successfully !!');
     }
 
     /**
      * Remove the specified resource from storage.
+     * 
+     * @param int $id
+     * @return \Illuminate\Http\Response
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        profil::where('nama_lengkap', $id)->delete();
+        return redirect()->to('profil')->with('success','Data deleted successfully !!');
     }
 }

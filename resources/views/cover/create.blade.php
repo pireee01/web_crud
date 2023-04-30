@@ -2,22 +2,11 @@
 <!-- START FORM -->
 @section('content')
 
-@if ($errors->any())
-<div class="pt-3">
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $item)
-                <li>
-                    {{ $item }}
-                </li>
-            @endforeach
-        </ul>
-    </div>
-</div>
-@endif
+
 <form action='{{ url('profil') }}' method='post'>
 @csrf
         <div class="my-4 p-4 bg-body rounded shadow-sm">
+            <a href='{{ url('profil') }}' class="btn btn-secondary">< Back </a>
              <div class="mb-4 row">
                 <label for="nama" class="col-sm-2 col-form-label">Nama Lengkap</label>
                 <div class="col-sm-10">
