@@ -1,5 +1,5 @@
 @extends('layout.template')
-<!-- START FORM -->
+
 @section('content')
 
 
@@ -43,6 +43,6 @@
     </div>
   </form>
     </div>
-    <!-- AKHIR FORM -->   
+    
 @endsection
        
